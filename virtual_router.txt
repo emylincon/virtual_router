@@ -1,0 +1,48 @@
+
+! ROUTER 1 CONFIGURATION SCRIPT
+
+conf t
+	interface FastEthernet0/0
+		ip address dhcp
+		no shutdown
+		exit
+	
+	interface FastEthernet0/1
+		ip address 192.168.1.1 255.255.255.0
+		no shutdown
+		exit
+		
+	ip domain-lookup
+	ip dhcp-server 192.168.1.1 
+	ip dhcp pool LAN
+		network 192.168.1.0 255.255.255.0
+		default-router 192.168.1.1
+		dns-server 8.8.8.8 192.168.1.1
+		exit
+	ip domain name R1.com
+	
+	
+	interface FastEthernet0/0
+		ip nat outside
+		exit
+	
+	interface FastEthernet0/1
+		ip nat inside
+		exit
+	
+	access-list 1 permit 192.168.1.0 0.0.0.255
+
+	ip nat source list 1 interface FastEthernet0/0 overload
+	
+	
+! HOST NETWORK CONFIGURATION
+
+# Static config for eth0
+auto eth0
+iface eth0 inet static
+	address 192.168.1.100
+	netmask 255.255.255.0
+	gateway 192.168.1.1
+	up echo nameserver 8.8.8.8 192.168.1.1 > /etc/resolv.conf
+
+	
