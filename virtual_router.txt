@@ -44,5 +44,15 @@ iface eth0 inet static
 	netmask 255.255.255.0
 	gateway 192.168.1.1
 	up echo nameserver 8.8.8.8 192.168.1.1 > /etc/resolv.conf
+	
+
+! raspberry pi3 wlan configuration
+
+Edit /etc/dhcpcd.conf as follows:-
+
+       interface wlan0
+       static ip_address=192.168.1.X/24
+       static routers=192.168.1.1
+       static domain_name_servers=8.8.8.8 192.168.1.1
 
 	
